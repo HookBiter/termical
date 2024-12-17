@@ -84,6 +84,8 @@ impl Daily {
                     }
                 }
             }
+        } else {
+            events = vec![Event::empty()];
         }
         return Self {
             events,
