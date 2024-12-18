@@ -1,6 +1,8 @@
+use chrono::{Duration, Utc};
 use ratatui::{buffer::Buffer, layout::Rect, widgets::Widget};
 
-use super::daily::Daily;
+use super::{daily::Daily, event::Event, selectable::Selectable};
+use crate::calender::event::Event as EventData;
 
 pub struct Weekly {
     days: [Daily; 7],
@@ -8,9 +10,18 @@ pub struct Weekly {
 
 impl Weekly {
     pub fn new() -> Self {
+        //testing
+        let mut e = Event::new(EventData::new(
+            "test",
+            "test",
+            Utc::now(),
+            Utc::now() + Duration::hours(1),
+        ));
+        e.mark();
+        //testing end
         return Self {
             days: [
-                Daily::new(vec![]),
+                Daily::new(vec![e]),
                 Daily::new(vec![]),
                 Daily::new(vec![]),
                 Daily::new(vec![]),

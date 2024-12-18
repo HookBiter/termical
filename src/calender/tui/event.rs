@@ -4,22 +4,31 @@ use std::cmp::Ordering;
 use ratatui::{
     buffer::Buffer,
     layout::Rect,
-    style::Stylize,
+    style::{self, Color, Stylize},
     symbols::border::PLAIN,
     widgets::{Block, Widget},
 };
 
+use super::selectable::Selectable;
+
 pub struct Event {
+    is_marks: bool,
     pub event: Option<Event_Data>,
 }
 
 impl Event {
     pub fn new(event: Event_Data) -> Self {
-        return Event { event: Some(event) };
+        return Event {
+            event: Some(event),
+            is_marks: false,
+        };
     }
 
     pub fn empty() -> Self {
-        return Event { event: None };
+        return Event {
+            event: None,
+            is_marks: false,
+        };
     }
 
     pub fn is_empty(&self) -> bool {
@@ -33,6 +42,7 @@ impl Event {
 impl Clone for Event {
     fn clone(&self) -> Self {
         return Self {
+            is_marks: self.is_marks.clone(),
             event: self.event.clone(),
         };
     }
@@ -43,23 +53,32 @@ impl Widget for Event {
     where
         Self: Sized,
     {
+        let marks_border_color = Color::Magenta;
+        let border_style = style::Style::new().fg(marks_border_color);
+        let mut block = Block::bordered().border_set(PLAIN);
+        if self.is_marks {
+            block = block.border_style(border_style)
+        }
         match self.event {
             Some(event) => {
-                Block::bordered()
-                    .on_cyan()
-                    .title(event.name)
-                    .border_set(PLAIN)
-                    .render(area, buf);
+                block.on_light_cyan().title(event.name).render(area, buf);
             }
             None => {
-                Block::bordered()
-                    .on_dark_gray()
-                    .title("Empty")
-                    .border_set(PLAIN)
-                    .render(area, buf);
+                block.on_dark_gray().title("Empty").render(area, buf);
             }
         }
     }
+}
+
+impl Selectable for Event {
+    fn mark(&mut self) {
+        self.is_marks = true;
+    }
+    fn unmark(&mut self) {
+        self.is_marks = false;
+    }
+    fn select(&mut self) {}
+    fn deselect(&mut self) {}
 }
 
 impl Ord for Event {

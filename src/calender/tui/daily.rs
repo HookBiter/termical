@@ -5,11 +5,13 @@ use crate::utils::time::Time;
 use chrono::Timelike;
 use ratatui::{
     buffer::Buffer,
-    layout::Rect,
+    layout::{Margin, Rect},
     style::{Color, Stylize},
     symbols::{border::ROUNDED, line::HORIZONTAL},
     widgets::{Block, Widget},
 };
+
+use super::selectable::Selectable;
 
 pub struct Daily {
     empty_color: Color,
@@ -21,19 +23,6 @@ impl Daily {
     pub fn new(mut events: Vec<Event>) -> Self {
         if !events.is_empty() {
             events.sort();
-            /*
-            let start = chrono::offset::Utc::now();
-            let start = start
-                - Duration::seconds(
-                    (start.hour() * 60 * 60 + start.minute() * 60 + start.second()) as i64,
-                );
-            let start = Time::new(
-                start.hour() as u8,
-                start.minute() as u8,
-                start.second() as u8,
-            )
-            .unwrap();
-            */
             let start = Time::min();
             let first_event = events.get(0).unwrap().event.as_ref().unwrap();
             let first_event_time = Time::new(
@@ -89,8 +78,8 @@ impl Daily {
         }
         return Self {
             events,
-            empty_color: Color::Gray,
-            filled_color: Color::DarkGray,
+            empty_color: Color::DarkGray,
+            filled_color: Color::Cyan,
         };
     }
 
@@ -131,11 +120,23 @@ impl Widget for Daily {
     where
         Self: Sized,
     {
-        let block = Block::bordered().white().on_blue();
-        block.border_set(ROUNDED).render(area, buf);
+        let _block = Block::bordered()
+            .white()
+            .on_blue()
+            .border_set(ROUNDED)
+            .title("day")
+            .render(area, buf);
+        let events_area = area.inner(Margin::new(1, 1));
         let _hour_height = area.height / 24;
-        self.draw_background(area, buf);
+        //self.draw_background(area, buf);
         //self.draw_hour_lines(area, buf);
-        self.draw_events_blocks(area, buf);
+        self.draw_events_blocks(events_area, buf);
     }
+}
+
+impl Selectable for Daily {
+    fn mark(&mut self) {}
+    fn unmark(&mut self) {}
+    fn select(&mut self) {}
+    fn deselect(&mut self) {}
 }
