@@ -1,7 +1,7 @@
 use chrono::{Duration, Utc};
 use ratatui::{buffer::Buffer, layout::Rect, widgets::Widget};
 
-use super::{daily::Daily, event::Event, selectable::Selectable};
+use super::{component::Component, daily::Daily, event::Event, selectable::Selectable};
 use crate::calender::event::Event as EventData;
 
 pub struct Weekly {
@@ -31,6 +31,19 @@ impl Weekly {
             ],
         };
     }
+}
+
+impl Component for Weekly {
+    fn get_focused(&self) -> Option<Box<&dyn Component>> {
+        for day in self.days.iter() {
+            let comp = day.get_focused();
+            if comp.is_some() {
+                return comp;
+            }
+        }
+        return None;
+    }
+    fn handle_input(&mut self, input: Option<crossterm::event::Event>) {}
 }
 
 impl Widget for Weekly {

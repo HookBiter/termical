@@ -11,7 +11,7 @@ use ratatui::{
     widgets::{Block, Widget},
 };
 
-use super::selectable::Selectable;
+use super::{component::Component, selectable::Selectable};
 
 pub struct Daily {
     empty_color: Color,
@@ -113,6 +113,19 @@ impl Daily {
             event.clone().render(block_area, buf);
         }
     }
+}
+
+impl Component for Daily {
+    fn get_focused(&self) -> Option<Box<&dyn Component>> {
+        for event in self.events.iter() {
+            let comp = event.get_focused();
+            if comp.is_some() {
+                return comp;
+            }
+        }
+        return None;
+    }
+    fn handle_input(&mut self, input: Option<crossterm::event::Event>) {}
 }
 
 impl Widget for Daily {

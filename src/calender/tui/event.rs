@@ -9,7 +9,7 @@ use ratatui::{
     widgets::{Block, Widget},
 };
 
-use super::selectable::Selectable;
+use super::{component::Component, selectable::Selectable};
 
 pub struct Event {
     is_marks: bool,
@@ -45,6 +45,18 @@ impl Clone for Event {
             is_marks: self.is_marks.clone(),
             event: self.event.clone(),
         };
+    }
+}
+
+impl Component for Event {
+    fn get_focused(&self) -> Option<Box<&dyn Component>> {
+        if self.is_marks {
+            return Some(Box::new(self));
+        }
+        return None;
+    }
+    fn handle_input(&mut self, input: Option<crossterm::event::Event>) {
+        todo!();
     }
 }
 
