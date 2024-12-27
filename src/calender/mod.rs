@@ -1,12 +1,11 @@
-mod event;
-mod tui;
+pub mod calender;
+pub mod event;
 
 use ratatui::{
     crossterm::event::{KeyCode, KeyEventKind},
     DefaultTerminal,
 };
 use std::io::Result;
-use tui::weekly::Weekly;
 pub fn app() -> Result<()> {
     let mut terminal = ratatui::init();
     terminal.clear()?;
@@ -18,8 +17,8 @@ pub fn app() -> Result<()> {
 pub fn run(mut terminal: DefaultTerminal) -> Result<()> {
     loop {
         terminal.draw(|frame| {
-            let widget = test_data();
-            frame.render_widget(widget, frame.area());
+            //let widget = test_data();
+            //frame.render_widget(widget, frame.area());
         })?;
         if let crossterm::event::Event::Key(key) = crossterm::event::read()? {
             if key.kind == KeyEventKind::Press && key.code == KeyCode::Char('q') {
@@ -29,6 +28,7 @@ pub fn run(mut terminal: DefaultTerminal) -> Result<()> {
     }
 }
 
+/*
 fn test_data() -> Weekly {
     /*
     let s = chrono::offset::Utc::now();
@@ -42,5 +42,24 @@ fn test_data() -> Weekly {
     //    .white()
     //    .on_blue();
     */
-    return Weekly::new();
+    //testing
+    let mut e = Event::new(EventData::new(
+        "test",
+        "test",
+        Utc::now(),
+        Utc::now() + Duration::hours(1),
+    ));
+    e.mark();
+    let week = [
+        Daily::new(vec![e]),
+        Daily::new(vec![]),
+        Daily::new(vec![]),
+        Daily::new(vec![]),
+        Daily::new(vec![]),
+        Daily::new(vec![]),
+        Daily::new(vec![]),
+    ];
+    //testing end
+    return Weekly::new(week);
 }
+*/

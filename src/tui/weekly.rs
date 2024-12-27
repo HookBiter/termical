@@ -1,33 +1,25 @@
-use chrono::{Duration, Utc};
 use ratatui::{buffer::Buffer, layout::Rect, widgets::Widget};
 
-use super::{component::Component, daily::Daily, event::Event, selectable::Selectable};
-use crate::calender::event::Event as EventData;
+use super::{component::Component, daily::Daily, event::Event};
+use crate::input::input::Input;
 
 pub struct Weekly {
     days: [Daily; 7],
 }
 
 impl Weekly {
-    pub fn new() -> Self {
-        //testing
-        let mut e = Event::new(EventData::new(
-            "test",
-            "test",
-            Utc::now(),
-            Utc::now() + Duration::hours(1),
-        ));
-        e.mark();
-        //testing end
+    pub fn new(days: [Vec<Event>; 7]) -> Self {
+        let mut days = days.to_vec();
+        days.reverse();
         return Self {
             days: [
-                Daily::new(vec![e]),
-                Daily::new(vec![]),
-                Daily::new(vec![]),
-                Daily::new(vec![]),
-                Daily::new(vec![]),
-                Daily::new(vec![]),
-                Daily::new(vec![]),
+                Daily::new(days.pop().unwrap()),
+                Daily::new(days.pop().unwrap()),
+                Daily::new(days.pop().unwrap()),
+                Daily::new(days.pop().unwrap()),
+                Daily::new(days.pop().unwrap()),
+                Daily::new(days.pop().unwrap()),
+                Daily::new(days.pop().unwrap()),
             ],
         };
     }
@@ -43,7 +35,9 @@ impl Component for Weekly {
         }
         return None;
     }
-    fn handle_input(&mut self, input: Option<crossterm::event::Event>) {}
+    fn handle_input(&mut self, input: Option<Input>) -> Option<Input> {
+        todo!();
+    }
 }
 
 impl Widget for Weekly {

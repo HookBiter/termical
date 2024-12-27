@@ -1,7 +1,4 @@
-use std::usize;
-
-use crate::calender::tui::event::Event;
-use crate::utils::time::Time;
+use crate::{input::input::Input, utils::time::Time};
 use chrono::Timelike;
 use ratatui::{
     buffer::Buffer,
@@ -11,7 +8,7 @@ use ratatui::{
     widgets::{Block, Widget},
 };
 
-use super::{component::Component, selectable::Selectable};
+use super::{component::Component, event::Event, selectable::Selectable};
 
 pub struct Daily {
     empty_color: Color,
@@ -125,7 +122,9 @@ impl Component for Daily {
         }
         return None;
     }
-    fn handle_input(&mut self, input: Option<crossterm::event::Event>) {}
+    fn handle_input(&mut self, input: Option<Input>) -> Option<Input> {
+        todo!();
+    }
 }
 
 impl Widget for Daily {

@@ -1,4 +1,4 @@
-use crate::calender::event::Event as Event_Data;
+use crate::{calender::event::Event as Event_Data, input::input::Input};
 use std::cmp::Ordering;
 
 use ratatui::{
@@ -55,7 +55,7 @@ impl Component for Event {
         }
         return None;
     }
-    fn handle_input(&mut self, input: Option<crossterm::event::Event>) {
+    fn handle_input(&mut self, input: Option<Input>) -> Option<Input> {
         todo!();
     }
 }
