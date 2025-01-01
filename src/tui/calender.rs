@@ -1,12 +1,17 @@
-use ratatui::{buffer::Buffer, layout::Rect, widgets::Widget};
+use chrono::{Datelike, Month, Utc};
+use ratatui::{
+    buffer::Buffer,
+    layout::{Constraint, Layout, Rect},
+    widgets::Widget,
+};
 
-use super::{component::Component, weekly::Weekly};
+use super::{component::Component, monthly::Monthly, weekly::Weekly};
 
 use crate::input::input::Input;
 
 pub struct Calender {
     //views: Vec<Box<dyn Component>>,
-    //months_view: (),
+    months_view: Monthly,
     weekly_view: Weekly,
 }
 
@@ -14,6 +19,10 @@ impl Calender {
     pub fn new() -> Self {
         // TODO: add views
         return Self {
+            months_view: Monthly::new(
+                Month::try_from(Utc::now().month() as u8).unwrap(),
+                Utc::now().year(),
+            ),
             weekly_view: Weekly::new([vec![], vec![], vec![], vec![], vec![], vec![], vec![]]),
         };
     }
@@ -43,6 +52,8 @@ impl Widget for Calender {
     where
         Self: Sized,
     {
+        let layout = Layout::horizontal([Constraint::Percentage(20), Constraint::Percentage(80)]);
+        /*
         let months_view_width = (area.width / 10) * 2;
         let width_of_weekly_view = (area.width / 10) * 8;
         let weekly_view_area = Rect::new(
@@ -51,6 +62,9 @@ impl Widget for Calender {
             width_of_weekly_view,
             area.height,
         );
-        self.weekly_view.render(weekly_view_area, buf);
+        */
+        let [month_area, weekly_area] = layout.areas(area);
+        self.months_view.render(month_area, buf);
+        self.weekly_view.render(weekly_area, buf);
     }
 }

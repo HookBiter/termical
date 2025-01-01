@@ -11,6 +11,7 @@ mod calender;
 mod component;
 mod daily;
 mod event;
+mod monthly;
 mod selectable;
 mod weekly;
 
